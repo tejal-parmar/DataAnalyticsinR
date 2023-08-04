@@ -1,0 +1,79 @@
+---
+title: "Data Visualization using GGally"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  word_document: default
+---
+
+Data Visualization in R  
+
+
+```{r}
+suppressWarnings(library(tidyverse))
+suppressWarnings(library(GGally))
+```
+
+
+```{r}
+data <- read.csv(file = 'CaseStudy11_TBI.csv')
+head(data)
+```
+
+Q1: Creating a correlation plot to know If worst.GCS (worst Glasgow Coma Scale Score) significantly correlated with 6m.gose (GCS at 6 month follow-up)?  
+  
+```{r}
+data_1 <- data %>% subset(select = c("worst0gcs", "X6m0gose" , "sex"))
+head(data_1)
+```
+```{r}
+ggpairs(data_1, ggplot2::aes(colour=sex))
+```
+The plot above shows a weak correlation with coefficient 0.194, between worst GCS(glassgow coma scale score) and 6m.gose(glassgow outcome scale), as per the sex the males are having moderate correlation and females are having negative correlation with respect to X6m0gose  
+  
+  
+Q2: Are different mechanisms of injury significantly correlated with higher or lower GCS scores?  
+  
+Below four plots compare the different mechanisms of injury with GCS scores  
+  
+```{r}
+ggplot(data) +
+ geom_bar(aes(x = worst0gcs, fill = mechanism)) +
+ labs(x = 'worst0gcs') +
+ ggtitle("worst0gcs ~ mechanism ")
+```
+```{r}
+ggplot(data) +
+ geom_density(aes(x = icu0gcs, fill = mechanism)) +
+ labs(x = 'icu0gcs') +
+ ggtitle("icu0gcs ~ mechanism ")
+```
+```{r}
+ggplot(data) +
+ geom_histogram(aes(x = er0gcs, fill = mechanism)) +
+labs(x = 'er0gcs') +
+ ggtitle("er0gcs ~ mechanism ")
+```
+```{r}
+ggplot(data) +
+ geom_density(aes(x = field0gcs, fill = mechanism)) +
+ labs(x = 'field0gcs') +
+ ggtitle("field0gcs ~ mechanism ")
+```
+  
+All the four plots above conclude that different mechanisms of injury significantly correlated with lower GCS scores  
+  
+    
+Q3: Are GCS scores significantly correlated with seizures at any time (ever.sz)?  
+  
+```{r}
+data_2 <- data %>%
+ subset(select = c("worst0gcs", "er0gcs", "field0gcs", "icu0gcs", "ever0sz"))
+head(data_2)
+```
+```{r}
+ggpairs(data_2)
+```
+  
+The above plots show GCS scores are negatively correlated with seizures at any time. 
